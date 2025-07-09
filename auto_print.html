@@ -8,10 +8,12 @@
         margin: 0;
         padding: 0;
         height: 100%;
+        overflow: hidden;
       }
-      embed {
+      iframe {
         width: 100%;
         height: 100%;
+        border: none;
       }
     </style>
   </head>
@@ -21,16 +23,15 @@
       const pdfUrl = urlParams.get('pdf');
 
       if (pdfUrl) {
-        const embed = document.createElement('embed');
-        embed.src = pdfUrl;
-        embed.type = 'application/pdf';
-        document.body.appendChild(embed);
-
-        window.onload = function () {
+        const iframe = document.createElement('iframe');
+        iframe.src = pdfUrl;
+        iframe.onload = () => {
           setTimeout(() => {
-            window.print();
-          }, 1000);
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          }, 1000); // give browser time to render
         };
+        document.body.appendChild(iframe);
       } else {
         document.body.innerHTML = "<p>No PDF URL provided.</p>";
       }
